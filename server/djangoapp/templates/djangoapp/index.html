@@ -28,23 +28,23 @@
                     <li class="nav-item">
                         <a class="nav-link p-3" href="https://raekwill15-8000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/djangoapp/contact">Contact us</a>
                     </li>
-                    {% if True %}
+                    {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <form class="">
-                            <input class="mt-1" type="text" placeholder="Username"/>
-                            <input class="" type="password" placeholder="Password"/>
+                        Welcome {{user.username}}
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'djangoapp:logout' %}"><button class="btn btn-light p-2 mb-1 ml-2">Logout</button></a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <form class="" action="{% url 'djangoapp:login' %}" method="post">
+                            <input class="mt-1" type="text" placeholder="Username" name="username"/>
+                            <input class="" type="password" placeholder="Password" name="psw"/>
                             <button type="submit" class="btn btn-primary p-2 mb-1">Sign In</button>
                         </form>
                     </li>
                     <li class="nav-item">
                         <button class="btn btn-light p-2 mb-1 ml-2">Sign Up</button>
-                    </li>
-                    {% else %}
-                    <li class="nav-item">
-                        Welcome {user.username} user
-                    </li>
-                    <li class="nav-item">
-                        <button class="btn btn-light p-2 mb-1 ml-2">Logout</button>
                     </li>
                     {% endif %}
                 </ul>
