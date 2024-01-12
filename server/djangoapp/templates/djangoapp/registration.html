@@ -6,6 +6,57 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
     <body>
+        <nav class="navbar navbar-light bg-light d-flex justify-content-between align-items-center">
+            <!-- <div class=""> -->
+                <div>
+                <a class="navbar-brand" href="{% url 'djangoapp:index' %}">Dealership Review</a>
+                </div>
+                <div>
+                <ul class="navbar-nav list-group-horizontal d-flex align-items-center">
+                    <li class="nav-item"> 
+                        <a class="nav-link p-3" href="https://raekwill15-8000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/djangoapp/about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link p-3" href="https://raekwill15-8000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/djangoapp/contact">Contact us</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        Welcome {{user.username}}
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'djangoapp:logout' %}"><button class="btn btn-light p-2 mb-1 ml-2">Logout</button></a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <form class="" action="{% url 'djangoapp:login' %}" method="post">
+                            <input class="mt-1" type="text" placeholder="Username" name="username"/>
+                            <input class="" type="password" placeholder="Password" name="psw"/>
+                            <button type="submit" class="btn btn-primary p-2 mb-1">Sign In</button>
+                        </form>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'djangoapp:signup' %}"><button class="btn btn-light p-2 mb-1 ml-2">Sign Up</button> </a>
+                    </li>
+                    {% endif %}
+                </ul>
+                <!-- </div> -->
+            </div>
+        </nav>
     <!--Add a registration form here -->
+    <h2 class="pl-4 pt-5"> Sign Up </h2>
+    <div class="text-success mx-4">
+        <hr>
+    </div>
+        <form action="{% url 'djangoapp:signup' %}" method="post" class="pl-4 pt-2">
+            <label for="username"><b>User Name</b></label> <br>
+            <input name="username" type="text" class="" placeholder="Enter User Name:"/> <br>
+            <label for="fname"><b>First Name</b></label> <br>
+            <input name="fname" type="text" class="" placeholder="Enter First Name:"/> <br>
+            <label for="lname"><b>Last Name <b></label> <br>
+            <input name="lname" type="text" class="" placeholder="Enter Last Name:"/> <br>
+            <label for="pswd"><b>Password</b></label><br>
+            <input name="pswd" type="password" class="" placeholder="Enter Password"/> <br>  
+            <button type="submit" class="btn btn-primary mt-3"> Sign up </button>
+        </form>
     </body>
 </html>
