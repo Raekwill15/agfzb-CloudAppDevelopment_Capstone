@@ -9,7 +9,7 @@ from django.contrib import messages
 from datetime import datetime
 import logging
 import json
-from .restapis import get_dealers_from_cf
+from .restapis import get_dealers_from_cf, get_dealer_by_id_from_cf, get_dealers_by_state_from_cf
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -93,7 +93,7 @@ def registration_request(request):
 #         return render(request, 'djangoapp/index.html', context)
 def get_dealerships(request):
     if request.method == "GET":
-        url = "https://raekwill15-3000.theiadockernext-1-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get"
+        url = "https://raekwill15-3000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get"
         # Get dealers from the URL
         dealerships = get_dealers_from_cf(url)
         # Concat all dealer's short name
@@ -101,10 +101,27 @@ def get_dealerships(request):
         # Return a list of dealer short name
         return HttpResponse(dealer_names)
 
+def get_dealer_by_id(request,id):
+    dealer_id = id
+    if request.method == "GET":
+        url = f"https://raekwill15-3000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get?id={dealer_id}"
+        dealership = get_dealer_by_id_from_cf(url,dealer_id)
+        return HttpResponse(dealership)
+
+def get_dealers_by_state(request, state):
+    print("We STARTED THE STATE URL!!!!!_________________")
+    dealerState = state
+    if request.method == "GET":
+        url = f"https://raekwill15-3000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get?state={state}"
+        dealerships = get_dealers_by_state_from_cf(url, dealerState)
+        return HttpResponse(dealerships)
+
 
 # Create a `get_dealer_details` view to render the reviews of a dealer
 # def get_dealer_details(request, dealer_id):
 # ...
+
+
 
 # Create a `add_review` view to submit a review
 # def add_review(request, dealer_id):
