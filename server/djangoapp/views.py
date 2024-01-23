@@ -9,7 +9,7 @@ from django.contrib import messages
 from datetime import datetime
 import logging
 import json
-from .restapis import get_dealers_from_cf, get_dealer_by_id_from_cf, get_dealers_by_state_from_cf
+from .restapis import get_dealers_from_cf, get_dealer_by_id_from_cf, get_dealers_by_state_from_cf, get_dealer_reviews_from_cf
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -120,6 +120,13 @@ def get_dealers_by_state(request, state):
 # Create a `get_dealer_details` view to render the reviews of a dealer
 # def get_dealer_details(request, dealer_id):
 # ...
+def get_dealer_details(request, id):
+    print("___________WE STARTED THE REVIEW URL!!!!__________")
+    if request.method == "GET":
+        url = f"https://raekwill15-3100.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/reviews/get?id={id}"
+        reviews = get_dealer_reviews_from_cf(url, id)
+        return HttpResponse(reviews)
+
 
 
 
