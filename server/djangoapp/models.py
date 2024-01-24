@@ -90,4 +90,4 @@ class DealerReview:
         self.id = id
 
     def __str__(self):
-        return f"Dealership: {self.dealership}, Review: {self.review}" 
+        return f"Dealership: {self.dealership}, Review: {self.review}, Sentiment: {self.sentiment}" 

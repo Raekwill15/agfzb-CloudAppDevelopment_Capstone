@@ -9,7 +9,7 @@ from django.contrib import messages
 from datetime import datetime
 import logging
 import json
-from .restapis import get_dealers_from_cf, get_dealer_by_id_from_cf, get_dealers_by_state_from_cf, get_dealer_reviews_from_cf
+from .restapis import get_dealers_from_cf, get_dealer_by_id_from_cf, get_dealers_by_state_from_cf, get_dealer_reviews_from_cf, post_request
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -127,10 +127,22 @@ def get_dealer_details(request, id):
         reviews = get_dealer_reviews_from_cf(url, id)
         return HttpResponse(reviews)
 
-
-
-
 # Create a `add_review` view to submit a review
 # def add_review(request, dealer_id):
 # ...
+def add_review(request, dealer_id):
+    if request.user.is_authenticated:
+        url = "https://raekwill15-3100.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/review/add?dealer_id={dealer_id}"
 
+        review = {}
+        review["time"] = datetime.utcnow().isoformat()
+        review["dealership"] = dealer_id
+        review["review"] = "This is a great car dealer"
+        review["purchase"] = False
+        print("WE ARE AUTHENTICATED")
+        json_payload = {}
+        json_payload['review'] = review
+        print("WE ARE STARTING THE OST REQUEST")
+        response = post_request(url, json_payload, dealer_id=dealer_id)
+        print("WE MADE IT PAST THE POST REQUEST")
+        return HttpResponse(response)

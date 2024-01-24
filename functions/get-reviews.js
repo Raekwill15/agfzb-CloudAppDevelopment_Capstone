@@ -27,6 +27,11 @@ let db;
 
 app.use(express.json());
 
+app.post('/review/add' , (req,res) => {
+    
+})
+
+
 app.get('/reviews/get' , (req,res) => {
     const { id } = req.query;
 
