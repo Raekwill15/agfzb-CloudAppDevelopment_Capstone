@@ -145,4 +145,5 @@ def add_review(request, dealer_id):
         print("WE ARE STARTING THE OST REQUEST")
         response = post_request(url, json_payload, dealer_id=dealer_id)
         print("WE MADE IT PAST THE POST REQUEST")
+        print(response)
         return HttpResponse(response)

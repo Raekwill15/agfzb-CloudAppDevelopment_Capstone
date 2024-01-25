@@ -41,6 +41,8 @@ def post_request(url, json_payload, **kwargs):
         return {}
     status_code = response.status_code
     print("With status {} ".format(status_code))
+    print(response)
+    print("^^^^^^^^^RESPONSE^^^^^^^")
     return response
 # Create a get_dealers_from_cf method to get dealers from a cloud function
 # def get_dealers_from_cf(url, **kwargs):
@@ -130,7 +132,7 @@ def analyze_review_sentiments(text):
     NLU_url = "https://api.us-east.natural-language-understanding.watson.cloud.ibm.com/instances/9f8cc0ba-2263-42f9-ab11-d3588755545f/v1/analyze?version=2019-07-12"
     api_key = "venuSe6smIHzzbuD2ZH82Al66pessXEDcTB3FZM9j2L_"
     response = get_request(url=NLU_url, api_key=api_key, text=text, features='sentiment', return_analyzed_text=True)
-    print(response)
-    print("^^^^RESPONSE^^^^")
+    # print(response)
+    # print("^^^^RESPONSE^^^^")
     return f"{response['sentiment']['document']['label']} Score: {response['sentiment']['document']['score']}"
 

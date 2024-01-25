@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const port = process.eventNames.PORT || 3100;
 const Cloudant = require('@cloudant/cloudant');
+// const { CloudantV1 } = require('')
 
 async function dbCloudantConnect() {
     try {
@@ -10,7 +11,7 @@ async function dbCloudantConnect() {
             url: 'https://d64ff724-df11-4f37-bd70-cfa6953bd8c5-bluemix.cloudantnosqldb.appdomain.cloud',
         });
 
-        const db= cloudant.use('reviews');
+        const db = cloudant.use('reviews');
         console.info('Connect Success! DB Connected!');
         return db
     } catch(err) {
@@ -28,8 +29,22 @@ let db;
 app.use(express.json());
 
 app.post('/review/add' , (req,res) => {
-    
-})
+    // const { dealer_id } = req.query;
+
+    // const selector = {}
+
+    // if (dealer_id) {
+    //     selector.dealer_id = parseInt(dealer_id);
+    // }
+
+    // db.putDocument(req.body.review).then(response => {
+    //     console.log(response.result)
+    // })
+    const response = db.insert(req.body.review)
+
+    console.log(req.body.review);
+    res.json("Hello");
+});
 
 
 app.get('/reviews/get' , (req,res) => {
