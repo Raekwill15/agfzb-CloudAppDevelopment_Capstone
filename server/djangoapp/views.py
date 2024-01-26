@@ -134,15 +134,20 @@ def get_dealer_details(request, id):
 # def add_review(request, dealer_id):
 # ...
 def add_review(request,dealer_id):
-    if request.method == 'POST':
+    # if request.method == 'POST':
         if request.user.is_authenticated:
             url = "https://raekwill15-3100.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/review/add?dealer_id={dealer_id}"
 
             review = {}
-            review["time"] = datetime.utcnow().isoformat()
+            review["purchase_date"] = datetime.utcnow().isoformat()
             review["dealership"] = dealer_id
-            review["review"] = "This is a great car dealer"
-            review["purchase"] = False
+            review["review"] = "I did not like this dealership at all."
+            review["purchase"] = True
+            review["name"] = "Dennis Reynolds"
+            review["car_make"] = "Bentley"
+            review["car_model"] = "Artry"
+            review["car_year"] = "2023"
+            review["id"] = 12
             print("WE ARE AUTHENTICATED")
             json_payload = {}
             json_payload['review'] = review
@@ -151,6 +156,6 @@ def add_review(request,dealer_id):
             print("WE MADE IT PAST THE POST REQUEST")
             print(response)
             return HttpResponse(response)
-    elif request.method == "GET":
-        print("THIS IS A GET REQUEST")
-        return HttpResponse("HELLO WORLD")
+    # elif request.method == "GET":
+    #     print("THIS IS A GET REQUEST")
+    #     return HttpResponse("HELLO WORLD")

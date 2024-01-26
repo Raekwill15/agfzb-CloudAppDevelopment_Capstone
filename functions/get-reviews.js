@@ -53,7 +53,7 @@ app.get('/reviews/get' , (req,res) => {
     const selector = {}
 
     if (id) {
-        selector.id = parseInt(id);
+        selector.dealership = parseInt(id);
     }
 
     const queryOptions = {
