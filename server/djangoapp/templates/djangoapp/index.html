@@ -51,10 +51,67 @@
                 <!-- </div> -->
             </div>
         </nav>
+        <div class="content">
+            <table class="table" id="table" data-filter-control="true">
+                <thead>
+                    <tr>
+                        <th>
+                            ID
+                        </th>
+                        <th>
+                            Dealer Name
+                        </th>
+                        <th>
+                            City
+                        </th>
+                        <th>
+                            Address
+                        </th>
+                        <th>
+                            Zip
+                        </th>
+                        <th data-field="state" data-filter-control="select">
+                            State
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for dealer in dealerships %}
+                    <tr>
+                        <td>
+                            {{dealer.dealer_id}}
+                        </td>
+                        <td>
+                            <a href = "{% url 'djangoapp:dealerbyid' dealer.dealer_id %}">{{dealer.full_name}}</a>
+                        </td>    
+                        <td>
+                            {{dealer.city}}
+                        </td> 
+                        <td>
+                            {{dealer.address}}
+                        </td> 
+                        <td>
+                            {{dealer.zip}}
+                        </td> 
+                        <td>
+                            {{dealer.state}}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
         This is the index page of your Django app!
 
     <!--Add a dealer table here -->
 
     </body>
+
+    <script>
+        $(function() {
+          $('#table').bootstrapTable()
+        })
+      </script>
+
 
 </html>

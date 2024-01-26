@@ -92,14 +92,19 @@ def registration_request(request):
 #     if request.method == "GET":
 #         return render(request, 'djangoapp/index.html', context)
 def get_dealerships(request):
+    context = {}
+
     if request.method == "GET":
         url = "https://raekwill15-3000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get"
         # Get dealers from the URL
         dealerships = get_dealers_from_cf(url)
         # Concat all dealer's short name
+        context['dealerships'] = dealerships
         dealer_names = ' '.join([dealer.short_name for dealer in dealerships])
         # Return a list of dealer short name
-        return HttpResponse(dealer_names)
+        print("**********************************")
+        print(context['dealerships'])
+        return render(request, 'djangoapp/index.html', context)
 
 def get_dealer_by_id(request,id):
     dealer_id = id
