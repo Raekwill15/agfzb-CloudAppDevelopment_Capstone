@@ -24,7 +24,6 @@ logger = logging.getLogger(__name__)
 def about(request):
     return render(request, "djangoapp/about.html")
 
-
 # Create a `contact` view to return a static contact page
 #def contact(request):
 def contact(request):
@@ -35,9 +34,6 @@ def contact(request):
 # ...
 def login_request(request):
     print(request.method)
-    # print(request.POST['username'])
-    # print(request.POST['psw'])
-    # print("_________________________________________________")
     if request.method == "POST":
         username = request.POST['username']
         password = request.POST['psw']
@@ -51,7 +47,6 @@ def login_request(request):
     else:
         return redirect('djangoapp:index')
     
-
 # Create a `logout_request` view to handle sign out request
 # def logout_request(request):
 # ...
@@ -128,27 +123,34 @@ def get_dealers_by_state(request, state):
 def get_dealer_details(request, id):
     print("___________WE STARTED THE REVIEW URL!!!!__________")
     if request.method == "GET":
+        context = {}
         url = f"https://raekwill15-3100.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/reviews/get?id={id}"
         reviews = get_dealer_reviews_from_cf(url, id)
-        return HttpResponse(reviews)
+        context['reviews'] = reviews
+        print(reviews)
+        return render(request, 'djangoapp/dealer_details.html', context)
 
 # Create a `add_review` view to submit a review
 # def add_review(request, dealer_id):
 # ...
-def add_review(request, dealer_id):
-    if request.user.is_authenticated:
-        url = "https://raekwill15-3100.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/review/add?dealer_id={dealer_id}"
+def add_review(request,dealer_id):
+    if request.method == 'POST':
+        if request.user.is_authenticated:
+            url = "https://raekwill15-3100.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/review/add?dealer_id={dealer_id}"
 
-        review = {}
-        review["time"] = datetime.utcnow().isoformat()
-        review["dealership"] = dealer_id
-        review["review"] = "This is a great car dealer"
-        review["purchase"] = False
-        print("WE ARE AUTHENTICATED")
-        json_payload = {}
-        json_payload['review'] = review
-        print("WE ARE STARTING THE OST REQUEST")
-        response = post_request(url, json_payload, dealer_id=dealer_id)
-        print("WE MADE IT PAST THE POST REQUEST")
-        print(response)
-        return HttpResponse(response)
+            review = {}
+            review["time"] = datetime.utcnow().isoformat()
+            review["dealership"] = dealer_id
+            review["review"] = "This is a great car dealer"
+            review["purchase"] = False
+            print("WE ARE AUTHENTICATED")
+            json_payload = {}
+            json_payload['review'] = review
+            print("WE ARE STARTING THE OST REQUEST")
+            response = post_request(url, json_payload, dealer_id=dealer_id)
+            print("WE MADE IT PAST THE POST REQUEST")
+            print(response)
+            return HttpResponse(response)
+    elif request.method == "GET":
+        print("THIS IS A GET REQUEST")
+        return HttpResponse("HELLO WORLD")

@@ -12,12 +12,9 @@ def get_request(url, api_key=None, **kwargs):
     print(kwargs)
     print("GET from {} ".format(url))
     try:
-        print("__________BEFORE CRASH!!!!_________")
         if api_key != None:
-            print("__________BEFORE CRASH!!!!____w/ apikey_____")
             response = requests.get(url, headers={'Content-Type': 'application/json'}, params=kwargs, auth=HTTPBasicAuth('apikey', api_key))
         else:
-            print("__________BEFORE CRASH!!!!___w/o apikey______")
             # Call get method of requests library with URL and parameters
             response = requests.get(url, headers={'Content-Type': 'application/json'},
                                     params=kwargs)
@@ -41,8 +38,6 @@ def post_request(url, json_payload, **kwargs):
         return {}
     status_code = response.status_code
     print("With status {} ".format(status_code))
-    print(response)
-    print("^^^^^^^^^RESPONSE^^^^^^^")
     return response
 # Create a get_dealers_from_cf method to get dealers from a cloud function
 # def get_dealers_from_cf(url, **kwargs):
@@ -56,8 +51,6 @@ def get_dealers_from_cf(url, **kwargs):
         # Get the row list in JSON as dealers
         # dealers = json_result["rows"]
         dealers = json_result
-        print("_________________________________")
-        print(dealers)
 
         # For each dealer object
         for dealer in dealers:
@@ -81,7 +74,6 @@ def get_dealer_by_id_from_cf(url, dealerId):
                                    id=dealer["_id"], lat=dealer["lat"], long=dealer["long"],
                                    short_name=dealer["short_name"],state=dealer["state"],
                                    st=dealer["st"], zip=dealer["zip"],dealer_id=dealer["id"])
-        
         return dealer_obj
 
 def get_dealers_by_state_from_cf(url, dealerState):
@@ -108,9 +100,6 @@ def get_dealer_reviews_from_cf(url, dealerId):
     reviews_list = []
     if reviews:
         for x in reviews:
-            print(x)
-            print("______________________________")
-            print(x['dealership'])
 
             review_obj = DealerReview(dealership = x['dealership'], name = x['name'], review = x['review'], purchase=x['purchase'], id = x['id'])
             review_obj.sentiment = analyze_review_sentiments(review_obj.review)
@@ -132,7 +121,6 @@ def analyze_review_sentiments(text):
     NLU_url = "https://api.us-east.natural-language-understanding.watson.cloud.ibm.com/instances/9f8cc0ba-2263-42f9-ab11-d3588755545f/v1/analyze?version=2019-07-12"
     api_key = "venuSe6smIHzzbuD2ZH82Al66pessXEDcTB3FZM9j2L_"
     response = get_request(url=NLU_url, api_key=api_key, text=text, features='sentiment', return_analyzed_text=True)
-    # print(response)
-    # print("^^^^RESPONSE^^^^")
-    return f"{response['sentiment']['document']['label']} Score: {response['sentiment']['document']['score']}"
+
+    return response['sentiment']['document']['label']
 
