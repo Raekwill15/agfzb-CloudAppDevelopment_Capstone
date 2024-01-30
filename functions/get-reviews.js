@@ -58,7 +58,7 @@ app.get('/reviews/get' , (req,res) => {
 
     const queryOptions = {
         selector, 
-        limit: 10,
+        limit: 30,
     };
 
     db.find(queryOptions, (err, body) => {

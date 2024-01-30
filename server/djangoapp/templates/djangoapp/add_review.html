@@ -53,7 +53,7 @@
         </nav>
     <!--Add review form here -->
     <h2>Add a review about <b> {{dealership.full_name}}</b> </h2> <br>
-    <form action="{% url 'djangoapp:add_review' dealer_id %}">
+    <form action="{% url 'djangoapp:add_review' dealer_id %}" method="post">
         <label for="content"><b>Please enter your review here</b></label><br>
         <textarea class="form-control" id="content" name="content" rows="2" required> </textarea>
         <b>Car Purchased?</b> &nbsp; &nbsp;&nbsp;&nbsp;
@@ -61,7 +61,7 @@
         <label for="car"><b>Select your car (model-make-year):</b></label>
         <select name="car" id="car" class="form-select" required>
         {% for car in cars %}
-            <option selected value={{car.id}}>{{car.name}}-{{car.make.name}}-{{ car.year|date:"Y"}}</option>
+            <option selected >{{car.name}}-{{car.make.name}}-{{ car.year|date:"Y"}}</option>
         {% endfor %}
         </select>
         <br>

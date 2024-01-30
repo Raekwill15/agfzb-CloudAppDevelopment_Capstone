@@ -144,30 +144,40 @@ def get_dealer_details(request, id):
 # def add_review(request, dealer_id):
 # ...
 def add_review(request,dealer_id):
-    if request.method == 'POST':
+    if request.method == "POST":
         if request.user.is_authenticated:
             url = "https://raekwill15-3100.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/review/add?dealer_id={dealer_id}"
-
+            print("^^^^^^^^^^^^^^^^WE ARE IN ADD REVIEW WITH POST^^^^^^^^^^^^^^^")
             review = {}
-            review["purchase_date"] = datetime.utcnow().isoformat()
             review["dealership"] = dealer_id
             review["review"] = request.POST['content']
-            review["purchase"] = request.POST['purchasecheck']
-            # review["name"] = "Ryan Reynolds"
+            if request.POST['purchasecheck'] == 'on':
+                review['purchase'] = True
+            else:
+                review['purchase'] = False
+            print(review['purchase'])
+            review["name"] = "Anonymous"
             carinfo = request.POST['car'].split("-")
-            
-            review["car_make"] = carinfo[1]
+
+            print(carinfo)
+            print("______________________________________")
+
+
             review["car_model"] = carinfo[0]
+            review["car_make"] = carinfo[1]
             review["car_year"] = carinfo[2]
-            # review["id"] = 13
+            if review["purchase"] == True:
+                review["purchase_date"] = datetime.utcnow().isoformat()
+            
+            review["id"] = 13
             print("WE ARE AUTHENTICATED")
-            # json_payload = {}
-            # json_payload['review'] = review
+            json_payload = {}
+            json_payload['review'] = review
             print("WE ARE STARTING THE OST REQUEST")
-            # response = post_request(url, json_payload, dealer_id=dealer_id)
+            response = post_request(url, json_payload, dealer_id=dealer_id)
             print("WE MADE IT PAST THE POST REQUEST")
             # print(response)
-            return HttpResponse(response)
+            return redirect("djangoapp:dealerbyid", id=dealer_id)
     elif request.method == "GET":
         context = {}
         cars = CarModel.objects.filter(dealer_id = dealer_id)
