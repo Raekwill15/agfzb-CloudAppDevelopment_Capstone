@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
 # from .models import related models
+from .models import CarModel
 # from .restapis import related methods
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
@@ -101,6 +102,7 @@ def get_dealerships(request):
         print(context['dealerships'])
         return render(request, 'djangoapp/index.html', context)
 
+# Method when given a dealer id(int) will find the dealership that matches the given id in the API
 def get_dealer_by_id(request,id):
     dealer_id = id
     if request.method == "GET":
@@ -108,6 +110,7 @@ def get_dealer_by_id(request,id):
         dealership = get_dealer_by_id_from_cf(url,dealer_id)
         return HttpResponse(dealership)
 
+# Method when given a state will find all dealers in the API that are located in the given state
 def get_dealers_by_state(request, state):
     print("We STARTED THE STATE URL!!!!!_________________")
     dealerState = state
@@ -119,6 +122,8 @@ def get_dealers_by_state(request, state):
 
 # Create a `get_dealer_details` view to render the reviews of a dealer
 # def get_dealer_details(request, dealer_id):
+# Method parameter id is used asa parameter for another method 
+# to get all reviews from the dealership with the given id
 # ...
 def get_dealer_details(request, id):
     print("___________WE STARTED THE REVIEW URL!!!!__________")
@@ -126,7 +131,12 @@ def get_dealer_details(request, id):
         context = {}
         url = f"https://raekwill15-3100.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/reviews/get?id={id}"
         reviews = get_dealer_reviews_from_cf(url, id)
+        url2 = f"https://raekwill15-3000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get?id={id}"
+        dealership = get_dealer_by_id_from_cf(url2, id)
         context['reviews'] = reviews
+        context['dealership'] = dealership
+        print(dealership)
+        print("^^^^^^^^^^^^^^^^^^^^")
         print(reviews)
         return render(request, 'djangoapp/dealer_details.html', context)
 
@@ -134,28 +144,36 @@ def get_dealer_details(request, id):
 # def add_review(request, dealer_id):
 # ...
 def add_review(request,dealer_id):
-    # if request.method == 'POST':
+    if request.method == 'POST':
         if request.user.is_authenticated:
             url = "https://raekwill15-3100.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/review/add?dealer_id={dealer_id}"
 
             review = {}
             review["purchase_date"] = datetime.utcnow().isoformat()
             review["dealership"] = dealer_id
-            review["review"] = "I did not like this dealership at all."
-            review["purchase"] = True
-            review["name"] = "Dennis Reynolds"
-            review["car_make"] = "Bentley"
-            review["car_model"] = "Artry"
-            review["car_year"] = "2023"
-            review["id"] = 12
+            review["review"] = request.POST['content']
+            review["purchase"] = request.POST['purchasecheck']
+            # review["name"] = "Ryan Reynolds"
+            carinfo = request.POST['car'].split("-")
+            
+            review["car_make"] = carinfo[1]
+            review["car_model"] = carinfo[0]
+            review["car_year"] = carinfo[2]
+            # review["id"] = 13
             print("WE ARE AUTHENTICATED")
-            json_payload = {}
-            json_payload['review'] = review
+            # json_payload = {}
+            # json_payload['review'] = review
             print("WE ARE STARTING THE OST REQUEST")
-            response = post_request(url, json_payload, dealer_id=dealer_id)
+            # response = post_request(url, json_payload, dealer_id=dealer_id)
             print("WE MADE IT PAST THE POST REQUEST")
-            print(response)
+            # print(response)
             return HttpResponse(response)
-    # elif request.method == "GET":
-    #     print("THIS IS A GET REQUEST")
-    #     return HttpResponse("HELLO WORLD")
+    elif request.method == "GET":
+        context = {}
+        cars = CarModel.objects.filter(dealer_id = dealer_id)
+        url = f"https://raekwill15-3000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get?id={dealer_id}"
+        dealership = get_dealer_by_id_from_cf(url, dealer_id)
+        context['cars'] = cars
+        context['dealer_id'] = dealer_id
+        context['dealership'] = dealership
+        return render (request, 'djangoapp/add_review.html', context)
